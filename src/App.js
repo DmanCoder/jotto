@@ -6,7 +6,7 @@ import GuessedWords from './components/guessWords/guessedWords';
 
 const App = () => {
   return (
-    <div data-test="app-component" className="">
+    <div data-test="app-component" className="container">
       <h1>Jotto</h1>
       <Congrats success={false} />
       <GuessedWords
