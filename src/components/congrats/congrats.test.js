@@ -26,6 +26,15 @@ describe('<Congrats />', () => {
     expect(appComponent.length).toBe(1);
   });
 
-  it('Should render not text when `success` prop is false', () => {});
-  it('Should render non-empty congrats message when success prop is true', () => {});
+  it('Should render not text when `success` prop is false', () => {
+    const wrapper = setUp({ success: false });
+    const appComponent = findByTestAttribute(wrapper, 'congrats-component');
+    expect(appComponent.text()).toBe('');
+  });
+
+  it('Should render non-empty congrats message when success prop is true', () => {
+    const wrapper = setUp({ success: true });
+    const message = findByTestAttribute(wrapper, 'congrats-message');
+    expect(message.text().length).not.toBe(0);
+  });
 });
