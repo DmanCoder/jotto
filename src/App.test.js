@@ -1,8 +1,22 @@
-import { render, screen } from '@testing-library/react';
+import { shallow } from 'enzyme';
+
+// Component
 import App from './App';
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+// UTILS
+import allUTL from './utils/allUTL';
+
+const { findByTestAttribute } = allUTL.testingUTL;
+
+const setUp = (props = {}) => {
+  const component = shallow(<App {...props} />);
+  return component;
+};
+
+describe('<App />', () => {
+  it('Should render without errors', () => {
+    const wrapper = setUp();
+    const appComponent = findByTestAttribute(wrapper, 'app-component');
+    expect(appComponent.length).toBe(1);
+  });
 });
