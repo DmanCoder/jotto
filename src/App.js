@@ -6,10 +6,15 @@ import GuessedWords from './components/guessWords/guessedWords';
 import Input from './components/input/input';
 
 const App = () => {
+  const success = false;
+  const secretWord = 'party';
+  const guessedWords = [];
+
   return (
     <div data-test="app-component" className="container">
       <h1>Jotto</h1>
-      <Congrats success={false} />
+      <Congrats success={success} />
+      <Input success={success} secreteWord={secretWord} />
       <GuessedWords
         guessedWords={[
           {
@@ -18,8 +23,6 @@ const App = () => {
           },
         ]}
       />
-
-      <Input secreteWord="" />
     </div>
   );
 };
