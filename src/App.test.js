@@ -1,5 +1,7 @@
 import { mount } from 'enzyme';
-import { findByTestAttr } from '../test/testUtils';
+import { findByTestAttr, storeFactory } from '../test/testUtils';
+import { Provider } from 'react-redux';
+
 import App from './App';
 
 // activate global mock to make sure getSecretWord doesn't make network call
@@ -10,11 +12,16 @@ import { getSecretWord as mockGetSecretWord } from './actions';
  * Setup function for App component
  * @returns {Wrapper}
  */
-const setup = () => {
+const setup = (initialState = {}) => {
   // use mount, because useEffect not called on `shallow`
   // https://github.com/airbnb/enzyme/issues/2086
-  return mount(<App />);
-}
+  const store = storeFactory(initialState);
+  return mount(
+    <Provider store={store}>
+      <App />
+    </Provider>
+  );
+};
 
 test('renders without error', () => {
   const wrapper = setup();
@@ -26,7 +33,7 @@ describe('get secret word', () => {
   beforeEach(() => {
     // clear the mock calls from previous tests
     mockGetSecretWord.mockClear();
-  })
+  });
   test('getSecretWord on app mount', () => {
     const wrapper = setup();
     expect(mockGetSecretWord).toHaveBeenCalledTimes(1);

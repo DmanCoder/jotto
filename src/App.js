@@ -14,7 +14,7 @@ function App() {
 
   useEffect(() => {
     getSecretWord();
-  }, [])
+  }, []);
 
   return (
     <div data-test="component-app" className="container">

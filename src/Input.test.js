@@ -1,7 +1,8 @@
 import React from 'react';
-import { shallow } from 'enzyme';
-import { findByTestAttr, checkProps } from '../test/testUtils';
+import { mount } from 'enzyme';
+import { findByTestAttr, checkProps, storeFactory } from '../test/testUtils';
 
+import { Provider } from 'react-redux';
 import Input from './Input';
 
 // mock entire module for destructuring useState on import //////
@@ -11,16 +12,21 @@ import Input from './Input';
 //   useState: (initialState) => [initialState, mockSetCurrentGuess]
 // }))
 
-const setup = (success=false, secretWord='party') => {
-  return shallow(<Input success={success} secretWord={secretWord} />);
-}
+const setup = (initialState = {}, secretWord = 'party') => {
+  const store = storeFactory(initialState);
+  return mount(
+    <Provider store={store}>
+      <Input secretWord={secretWord} />
+    </Provider>
+  );
+};
 
 describe('render', () => {
   describe('success is false', () => {
     let wrapper;
     beforeEach(() => {
-      wrapper = setup(false);
-    })
+      wrapper = setup({ success: false });
+    });
     test('Input renders without error', () => {
       const inputComponent = findByTestAttr(wrapper, 'component-input');
       expect(inputComponent.length).toBe(1);
@@ -37,8 +43,8 @@ describe('render', () => {
   describe('success is true', () => {
     let wrapper;
     beforeEach(() => {
-      wrapper = setup(true);
-    })
+      wrapper = setup({ success: true });
+    });
     test('Input renders without error', () => {
       const inputComponent = findByTestAttr(wrapper, 'component-input');
       expect(inputComponent.length).toBe(1);
@@ -56,7 +62,7 @@ describe('render', () => {
 
 test('does not throw warning with expected props', () => {
   checkProps(Input, { secretWord: 'party' });
-})
+});
 
 describe('state controlled input field', () => {
   let mockSetCurrentGuess = jest.fn();
@@ -66,8 +72,8 @@ describe('state controlled input field', () => {
   beforeEach(() => {
     mockSetCurrentGuess.mockClear();
     originalUseState = React.useState;
-    React.useState = () => ["", mockSetCurrentGuess];
-    wrapper = setup();
+    React.useState = () => ['', mockSetCurrentGuess];
+    wrapper = setup({ success: false });
   });
   afterEach(() => {
     React.useState = originalUseState;
@@ -76,14 +82,14 @@ describe('state controlled input field', () => {
     const inputBox = findByTestAttr(wrapper, 'input-box');
     const mockEvent = { target: { value: 'train' } };
 
-    inputBox.simulate("change", mockEvent);
+    inputBox.simulate('change', mockEvent);
     expect(mockSetCurrentGuess).toHaveBeenCalledWith('train');
   });
   test('field is cleared upon submit button click', () => {
     const inputBox = findByTestAttr(wrapper, 'input-box');
     const mockEvent = { target: { value: 'train' } };
 
-    inputBox.simulate("change", mockEvent);
+    inputBox.simulate('change', mockEvent);
     expect(mockSetCurrentGuess).toHaveBeenCalledWith('train');
   });
-})
+});
